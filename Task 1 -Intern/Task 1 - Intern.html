@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>YOUR USERNAME - Task 1</title>
+        <style>.block { background-color:gainsboro; padding:1em; } </style>
+    </head>
+    <body>
+        <h1>INC - Task 1</h1>
+        <h2>My code:</h2>
+        <p id="code" class="block"></p>
+        <h2>Results of my code:</h2>
+        <p id="results" class="block"></p>
+        <script id="task_id">
+            {# INPUT #}
+            let data = [
+                {"page_id": 6682420, "creation_date": "2021-09-13", "title": "André Baniwa"},
+                {"page_id": 4246775, "creation_date": "2013-12-10", "title": "Benki Piyãko"},
+                {"page_id": 5882073, "creation_date": "2018-12-03", "title": "Célia Xakriabá"},
+                {"page_id": 6977673, "creation_date": "2022-10-05", "title": "Chirley Pankará"},
+                {"page_id": 7069044, "creation_date": "2023-02-16", "title": "Cristine Takuá"},
+                {"page_id": 2119511, "creation_date": "2009-01-28", "title": "Eliane Potiguara"},
+                {"page_id": 6714407, "creation_date": "2021-10-09", "title": "Jaider Esbell"},
+                {"page_id": 6977117, "creation_date": "2022-10-04", "title": "Jerônimo Rodrigues"},
+                {"page_id": 6935831, "creation_date": "2022-08-02", "title": "Nanblá Gakran"},
+                {"page_id": 4908665, "creation_date": "2015-11-13", "title": "Sônia Guajajara"},
+                {"page_id": 5886895, "creation_date": "2018-12-12", "title": "Vãngri Kaingáng"},
+                {"page_id": 6549130, "creation_date": "2021-04-10", "title": "Zezico Guajajara"},
+            ];
+
+            {# YOUR CODE HERE #}
+            
+            
+                let result=document.querySelector('#results');
+                let formattedResult=``;
+
+                formattedResult+=data.map(entry=>{
+                    const { title: articleTitle, page_id: pageId} = entry;
+                    let date=entry.creation_date;
+                    date=new Date(date).toLocaleDateString('en-US',{ year: 'numeric', month: 'long', day: 'numeric' })
+
+                    return `<li>Article "${articleTitle}" (Page ID ${pageId}) was created at ${date}.</li>`
+                }).join('')
+
+                result.innerHTML=`<ul style="list-style-type:none">${formattedResult}</ul>`
+            
+
+        </script>
+        <p id="result_id" style="display:none">
+            Article "André Baniwa" (Page ID 6682420) was created at September 13, 2021.
+            Article "Benki Piyãko" (Page ID 4246775) was created at December 10, 2013.
+            Article "Célia Xakriabá" (Page ID 5882073) was created at December 3, 2018.
+            Article "Chirley Pankará" (Page ID 6977673) was created at October 5, 2022.
+            Article "Cristine Takuá" (Page ID 7069044) was created at February 16, 2023.
+            Article "Eliane Potiguara" (Page ID 2119511) was created at January 28, 2009.
+            Article "Jaider Esbell" (Page ID 6714407) was created at October 9, 2021.
+            Article "Jerônimo Rodrigues" (Page ID 6977117) was created at October 4, 2022.
+            Article "Nanblá Gakran" (Page ID 6935831) was created at August 2, 2022.
+            Article "Sônia Guajajara" (Page ID 4908665) was created at November 13, 2015.
+            Article "Vãngri Kaingáng" (Page ID 5886895) was created at December 12, 2018.
+            Article "Zezico Guajajara" (Page ID 6549130) was created at April 10, 2021.
+        </p>
+        <script>
+            document.getElementById("code").innerText = document.getElementById("task_id").text;
+            document.getElementById("results").innerText=document.getElementById("result_id").innerText;
+        </script>
+    </body>
+</html>
