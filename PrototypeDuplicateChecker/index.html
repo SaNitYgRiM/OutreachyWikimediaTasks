@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prototype-Duplicate-Checker</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+ 
+      <main>
+    <div class="main-section">
+    
+    <input type="text"  id="reference-id" name="reference" placeholder="enter new reference (DOI/ISBN/PMID/URL..)" required>
+    </div>
+
+    <div class="submit-class">
+      <button type="submit" id="submit-btn">Submit</button>
+      </div>
+
+  </main>
+  
+
+  <p class='info'>few e.gs having different sources pointing to same data. Use any of them and check if it exists in the 'Used' Reference Section.</p>
+  <div class="sub-section">
+  
+    <div class="examples-inp">
+      
+      
+      <div class="examples">
+      
+      
+        <p>e.g-1:Philosophy of Social Science</p>
+        <ul>
+          <li>10.4324/9781003207795</li>
+          <li>978-1-003-20779-5</li>
+          <li>https://www.taylorfrancis.com/books/9781003207795</li>
+        </ul>
+      </div>
+      <div class="examples">
+        <p>e.g-2:Analysing public sector efficiency</p>
+        <ul>
+          <li>10.4337/9781839109164.00026</li>
+          <li>978-1-83910-916-4</li>
+          <li>https://www.elgaronline.com/view/book/9781839109164/book-part-9781839109164-26.xml</li>
+        </ul>
+      </div>
+      <div class="examples">
+        <p>use any other e.g. of your choice unlisted here!</p>
+        
+      </div>
+      
+    </div>
+    
+  
+
+  <div class="used-refs">
+      <p> Used References
+      </p>
+      <div>
+        <ul class="li-item-used-refs"></ul>
+      </div>
+
+    </div>
+  </div>
+    
+ <div class="toast-overlay" id="toast-overlay"></div>
+  <script src="script.js"></script>
+</body>
+</html>
