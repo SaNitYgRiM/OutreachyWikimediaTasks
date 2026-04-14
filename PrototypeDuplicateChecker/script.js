@@ -52,12 +52,12 @@ submitBtn.addEventListener('click', async(event)=>{
 
 
   const fnNames=[normalisedDOI,normalisedISBN,normalisedPMID,normalisedURL]
-
+  let flag=false;
   for(fn of fnNames){
-      if(fn(inputRef)===true){break;}
+      if(searchRefInLookup(fn(inputRef))===true){flag=true;break;}
   }
     
-  
+  if(!flag)callCitoidAPI(inputRef)
 
 
  
@@ -89,7 +89,7 @@ function normalisedURL(inputRef){
   let nURL;
    nURL=inputRef.replace(/^(?:https?:\/\/)?(?:www\.)?/,"").replace(/\/+$/,"")
    
-   return !searchRefInLookup(nURL)?callCitoidAPI(inpVal):true
+   return nURL
  
 }
 
@@ -98,7 +98,7 @@ function normalisedDOI(inputRef){
    let nDOI;
    nDOI=inputRef.replace(/^.*?(?=10\.)/,"")
    
-   return !searchRefInLookup(nDOI)?nDOI:true
+   return nDOI
 
 }
 
@@ -107,7 +107,7 @@ function normalisedPMID(inputRef){
   let nPMID;
    nPMID=inputRef.replace(/\D/g, "")
    
-   return !searchRefInLookup(nPMID)?nPMID:true
+   return nPMID
 }
 
 function normalisedISBN(inputRef){
@@ -117,7 +117,7 @@ function normalisedISBN(inputRef){
   //console.log(nISBN)
   if(nISBN.length===10)return convertISBN10To13(nISBN)
   
-  return !searchRefInLookup(nISBN)?nISBN:true;
+  return nISBN;
 }
 
 function convertISBN10To13(nISBN){
@@ -135,10 +135,10 @@ function convertISBN10To13(nISBN){
 }
 
 function searchRefInLookup(inp){
-  //console.log(lookupTableForRef[inp])
+  //console.log(inp)
   if(lookupTableForRef[inp]){
     let {title,date}=internalRefListForthisArticle[lookupTableForRef[inp]]
-    console.log(title+date)
+    //console.log(title+date)
     showToast(`This Reference(${title}, ${date} is already in use in this Article!`)
     return true
   }
@@ -148,7 +148,7 @@ function searchRefInLookup(inp){
 
 async function callCitoidAPI(reference){
   //console.log(inpVal)
-  const citoidUrl=`https://en.wikipedia.org/api/rest_v1/data/citation/mediawiki/${reference}`
+  const citoidUrl=`https://en.wikipedia.org/api/rest_v1/data/citation/mediawiki/`+encodeURIComponent(reference)
 
   try{
       const response=await fetch(citoidUrl,{
@@ -161,13 +161,14 @@ async function callCitoidAPI(reference){
       if(!response.ok)throw new Error('API Request failed')
 
       const data = await response.json();
-      //the first result contain the metadata we want
+      //the first result contain the metadata we want for now
       let ndata=data[0];
-      console.log(ndata)
+      //console.log(ndata)
 
       const reqFields=['DOI','ISBN','PMID','URL','ISSN','author','title','date']
       const refinedData={};
       const nUID=`ArticleUIDRef${Object.keys(internalRefListForthisArticle).length + 1}`
+      
       for(let i=0;i<reqFields.length;i++){
         //normalise just the first four fields and store the rest as it is.
         let key=reqFields[i];
@@ -176,7 +177,13 @@ async function callCitoidAPI(reference){
             if(ndata[key]){
               (key=='ISBN' && Array.isArray(ndata[key]))?val=cleanInputStrings(ndata[key][0])
               : val=cleanInputStrings(String(ndata[key]));
+              if(key=='URL')key='url'
               refinedData[key]=window[`normalised${key}`](val);
+              
+              //additional checks
+
+              let found=Array.isArray(refinedData[key])?searchRefInLookup[refinedData[key][0]]:searchRefInLookup[refinedData[key]]
+              if(found)break;
 
               Array.isArray(refinedData[key])?lookupTableForRef[refinedData[key][0]]=nUID:lookupTableForRef[refinedData[key]]=nUID
             
@@ -190,8 +197,8 @@ async function callCitoidAPI(reference){
      
       
       internalRefListForthisArticle[nUID]=refinedData;
-      console.log(internalRefListForthisArticle)
-      console.log(lookupTableForRef)
+      //console.log(internalRefListForthisArticle)
+      //console.log(lookupTableForRef)
       populateInternalRefList();
 
 }

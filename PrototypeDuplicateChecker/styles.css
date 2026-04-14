@@ -28,7 +28,7 @@ html,body{
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap:20px;
+  gap:50px;
   margin-top: 20px;
   color:rgb(75, 78, 75)
 }
@@ -65,6 +65,10 @@ html,body{
     z-index: 1000;
 }
 
+main{
+  margin-bottom:60px;
+}
+
 
 
 #toast-overlay div {
@@ -88,4 +92,8 @@ html,body{
 @keyframes slideUp {
     from { transform: translateY(100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+.info{
+  color: #3ea3bae0;
 }
