@@ -30,7 +30,8 @@ html,body{
   justify-content: center;
   gap:50px;
   margin-top: 20px;
-  color:rgb(75, 78, 75)
+  color:rgb(75, 78, 75);
+  padding:10px;
 }
 
 .submit-class{
@@ -96,4 +97,11 @@ main{
 
 .info{
   color: #3ea3bae0;
+}
+
+@media only screen and (max-width:670px){
+  .sub-section{
+    display: flex;
+    flex-direction: column-reverse;
+  }
 }
