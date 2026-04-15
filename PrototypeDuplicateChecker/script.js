@@ -32,12 +32,8 @@ let lookupTableForRef={
   "10.1371/journal.pcbi.1002947":"ArticleUIDRef1",
   "23555203":"ArticleUIDRef1",
   "ncbi.nlm.nih.gov/pubmed/23555203":"ArticleUIDRef1",
-  
-
-
 }
 
-//const originalInpVal=document.querySelector('#reference-id').value;
 const submitBtn=document.querySelector('#submit-btn')
 const toastOverlay = document.getElementById('toast-overlay');
 const ulList=document.querySelector('.li-item-used-refs')
@@ -50,7 +46,6 @@ submitBtn.addEventListener('click', async(event)=>{
   document.querySelector('#reference-id').value="";
   let inputRef=cleanInputStrings(inpVal)
 
-
   const fnNames=[normalisedDOI,normalisedISBN,normalisedPMID,normalisedURL]
   let flag=false;
   for(fn of fnNames){
@@ -59,34 +54,18 @@ submitBtn.addEventListener('click', async(event)=>{
     
   if(!flag)callCitoidAPI(inputRef)
 
-
- 
-
 })
-
-
-
-
-
-
-//let inputRef="10.1371/journal.pcbi.1002947"
 
 function cleanInputStrings(inputVal){
   //remove whitespace ,convert to lowercase
- 
   inputRef=inputVal.trim().toLowerCase();
-  
-  return inputRef;
-  // console.log(normalisedPMID(inputRef))
-  // console.log(normalisedISBN(inputRef));
-  // console.log(normalisedDOI(inputRef));
-  // console.log(normalisedURL(inputRef));
 
+  return inputRef;
 }
 
 function normalisedURL(inputRef){
   //remove https,https,www,trailing /,tracking queries?need to be done
-  let nURL;
+   let nURL;
    nURL=inputRef.replace(/^(?:https?:\/\/)?(?:www\.)?/,"").replace(/\/+$/,"")
    
    return nURL
@@ -114,7 +93,6 @@ function normalisedISBN(inputRef){
   //remove -,spaces, and convert 10 to 13 
   let nISBN;
   nISBN=inputRef.replace(/[^0-9x]/g, "")
-  //console.log(nISBN)
   if(nISBN.length===10)return convertISBN10To13(nISBN)
   
   return nISBN;
@@ -126,19 +104,18 @@ function convertISBN10To13(nISBN){
   newNISBN="978"+newNISBN
   let sumISBN10=0;
   for(let i=0;i<newNISBN.length;i++) i%2!=0? sumISBN10+=Number(newNISBN[i])*3: sumISBN10+=Number(newNISBN[i])
-  //console.log(sumISBN10)
+  
   sumISBN10=(10-(sumISBN10%10))%10
-  //console.log(sumISBN10)
   newNISBN+=sumISBN10
-  //console.log(newNISBN)
+  
   return newNISBN;
 }
 
 function searchRefInLookup(inp){
-  //console.log(inp)
+  //search for the reference in the lookup table
+  //if not found - show toast message
   if(lookupTableForRef[inp]){
     let {title,date}=internalRefListForthisArticle[lookupTableForRef[inp]]
-    //console.log(title+date)
     showToast(`This Reference(${title}, ${date} is already in use in this Article!`)
     return true
   }
@@ -147,7 +124,7 @@ function searchRefInLookup(inp){
 
 
 async function callCitoidAPI(reference){
-  //console.log(inpVal)
+ //call to citoid APi for metadata of the passed reference
   const citoidUrl=`https://en.wikipedia.org/api/rest_v1/data/citation/mediawiki/`+encodeURIComponent(reference)
 
   try{
@@ -163,10 +140,10 @@ async function callCitoidAPI(reference){
       const data = await response.json();
       //the first result contain the metadata we want for now
       let ndata=data[0];
-      //console.log(ndata)
-
       const reqFields=['DOI','ISBN','PMID','URL','ISSN','author','title','date']
       const refinedData={};
+      //creating unique IDs for internalList keys
+      //the current articleID+Ref+counter
       const nUID=`ArticleUIDRef${Object.keys(internalRefListForthisArticle).length + 1}`
       
       for(let i=0;i<reqFields.length;i++){
@@ -197,8 +174,6 @@ async function callCitoidAPI(reference){
      
       
       internalRefListForthisArticle[nUID]=refinedData;
-      //console.log(internalRefListForthisArticle)
-      //console.log(lookupTableForRef)
       populateInternalRefList();
 
 }
@@ -232,5 +207,3 @@ function populateInternalRefList(){
         ulList.appendChild(li);
     });
 }
-
-//cleanInputStrings(inpVal)
